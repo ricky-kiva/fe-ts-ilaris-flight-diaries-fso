@@ -1,4 +1,6 @@
+import { useEffect, useState } from "react";
 import { Diary } from "./types";
+import { getAllDiaries } from "./services/diaryService";
 
 interface DiariesProps {
   diaries: Diary[];
@@ -32,41 +34,18 @@ const Diaries = (props: DiariesProps) => {
 }
 
 const App = () => {
-  const data = [
-    {
-        "id": 1,
-        "date": "2017-01-01",
-        "weather": "rainy",
-        "visibility": "poor",
-        "comment": "Pretty scary flight, I'm glad I'm alive"
-    },
-    {
-        "id": 2,
-        "date": "2017-04-01",
-        "weather": "sunny",
-        "visibility": "good",
-        "comment": "Everything went better than expected, I'm learning much"
-    },
-    {
-        "id": 3,
-        "date": "2017-04-15",
-        "weather": "windy",
-        "visibility": "good",
-        "comment": "I'm getting pretty confident although I hit a flock of birds"
-    },
-    {
-        "id": 4,
-        "date": "2017-05-11",
-        "weather": "cloudy",
-        "visibility": "good",
-        "comment": "I almost failed the landing but I survived"
-    }
-  ];
+  const [diaries, setDiaries] = useState<Diary[]>([]);
+  
+  useEffect(() => {
+    getAllDiaries().then(data => {
+      setDiaries(data)
+    });
+  }, []);
 
   return (
     <div>
       <h2>Diary Entries</h2>
-      <Diaries diaries={data} />
+      <Diaries diaries={diaries} />
     </div>
   );
 }

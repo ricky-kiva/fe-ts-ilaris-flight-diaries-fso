@@ -53,7 +53,7 @@ const AddNewDiary = (props: AddNewDiaryProps) => {
       <form>
         <label htmlFor="date">date</label>
         <input
-          type="text"
+          type="date"
           id="date"
           value={date}
           onChange={(event) => setDate(event.target.value)}

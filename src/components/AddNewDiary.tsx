@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Diary, isDiary, isString, NewDiary } from "../types";
+import { Diary, isDiary, isString, NewDiary, Visibility, Weather } from "../types";
 import { createDiary } from "../services/diaryService";
 
 interface AddNewDiaryProps {
@@ -12,6 +12,9 @@ const AddNewDiary = (props: AddNewDiaryProps) => {
   const [weather, setWeather] = useState('');
   const [comment, setComment] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
+
+  const visibilityOptions: Visibility[] = ['great', 'good', 'ok', 'poor'];
+  const weatherOptions: Weather[] = ['sunny', 'rainy', 'cloudy', 'windy', 'stormy'];
 
   const clearFormFields = () => {
     setDate('');
@@ -59,22 +62,40 @@ const AddNewDiary = (props: AddNewDiaryProps) => {
           onChange={(event) => setDate(event.target.value)}
         />
         <br/>
-        <label htmlFor="visibility">visibility</label>
-        <input
-          type="text"
-          id="visibility"
-          value={visibility}
-          onChange={(event) => setVisibility(event.target.value)}
-        />
-        <br/>
-        <label htmlFor="weather">weather</label>
-        <input
-          type="text"
-          id="weather"
-          value={weather}
-          onChange={(event) => setWeather(event.target.value)}
-        />
-        <br/>
+        <div>
+          <label>Visibility </label>
+          {visibilityOptions.map((v) => (
+            <>
+              <label htmlFor={`visibility-${v}`}>{v}</label>
+              <input
+                key={v}
+                type="radio"
+                id={`visibility-${v}`}
+                name="visibility"
+                value={v}
+                checked={visibility === v}
+                onChange={(e) => setVisibility(e.target.value as Visibility)}
+              />
+            </>
+          ))}
+        </div>
+        <div>
+          <label>Weather  </label>
+          {weatherOptions.map((v) => (
+            <>
+              <label htmlFor={`weather-${v}`}>{v}</label>
+              <input
+                key={v}
+                type="radio"
+                id={`weather-${v}`}
+                name="weather"
+                value={v}
+                checked={weather === v}
+                onChange={(e) => setWeather(e.target.value as Weather)}
+              />
+            </>
+          ))}
+        </div>
         <label htmlFor="comment">comment</label>
         <input
           type="text"

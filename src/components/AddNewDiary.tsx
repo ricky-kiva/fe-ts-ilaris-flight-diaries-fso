@@ -1,9 +1,9 @@
 import { useState } from "react";
-import { Diary, NewDiary } from "../types";
+import { Diary, isDiary, isString, NewDiary } from "../types";
 import { createDiary } from "../services/diaryService";
 
 interface AddNewDiaryProps {
-  addDiary: (diary: Diary) => void
+  addDiary: (diary: Diary) => void,
 }
 
 const AddNewDiary = (props: AddNewDiaryProps) => {
@@ -11,8 +11,16 @@ const AddNewDiary = (props: AddNewDiaryProps) => {
   const [visibility, setVisibility] = useState('');
   const [weather, setWeather] = useState('');
   const [comment, setComment] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
 
-  const diaryCreation = (event: React.SyntheticEvent) => {
+  const clearFormFields = () => {
+    setDate('');
+    setVisibility('');
+    setWeather('');
+    setComment('');
+  }
+
+  const diaryCreation = async (event: React.SyntheticEvent) => {
     event.preventDefault();
 
     const newDiary: NewDiary = {
@@ -22,14 +30,26 @@ const AddNewDiary = (props: AddNewDiaryProps) => {
       comment: comment
     }
 
-    createDiary(newDiary).then(data => {
-      props.addDiary(data);
+    await createDiary(newDiary).then(data => {
+      if (isDiary(data)) {
+        props.addDiary(data);
+        clearFormFields();
+        setErrorMessage('');
+
+        return;
+      }
+      
+      if (isString(data)) setErrorMessage(`Error: ${data}`);
     });
   }
 
   return (
     <div onSubmit={diaryCreation}>
       <h3>Add new entry</h3>
+      {errorMessage !== ''
+        ? <p style={{ color: "red" }}>{errorMessage}</p>
+        : <></>
+      }
       <form>
         <label htmlFor="date">date</label>
         <input

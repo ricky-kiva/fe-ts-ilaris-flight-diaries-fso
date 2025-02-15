@@ -1,35 +1,74 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { Diary } from "./types";
 
-function App() {
-  const [count, setCount] = useState(0)
+interface DiariesProps {
+  diaries: Diary[];
+}
 
+const DiaryItem = (props: Diary) => {
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
+    <div>
+      <h3>{props.date}</h3>
+      <p>
+        visibility: {props.visibility}
+        <br/>weather: {props.weather}
       </p>
-    </>
+    </div>
   )
 }
 
-export default App
+const Diaries = (props: DiariesProps) => {
+  return (
+    <div>
+      {props.diaries.map((d) =>
+        <DiaryItem key={d.id}
+          id={d.id}
+          date={d.date}
+          visibility={d.visibility}
+          weather={d.weather}
+        />
+      )}
+    </div>
+  )
+}
+
+const App = () => {
+  const data = [
+    {
+        "id": 1,
+        "date": "2017-01-01",
+        "weather": "rainy",
+        "visibility": "poor",
+        "comment": "Pretty scary flight, I'm glad I'm alive"
+    },
+    {
+        "id": 2,
+        "date": "2017-04-01",
+        "weather": "sunny",
+        "visibility": "good",
+        "comment": "Everything went better than expected, I'm learning much"
+    },
+    {
+        "id": 3,
+        "date": "2017-04-15",
+        "weather": "windy",
+        "visibility": "good",
+        "comment": "I'm getting pretty confident although I hit a flock of birds"
+    },
+    {
+        "id": 4,
+        "date": "2017-05-11",
+        "weather": "cloudy",
+        "visibility": "good",
+        "comment": "I almost failed the landing but I survived"
+    }
+  ];
+
+  return (
+    <div>
+      <h2>Diary Entries</h2>
+      <Diaries diaries={data} />
+    </div>
+  );
+}
+
+export default App;
